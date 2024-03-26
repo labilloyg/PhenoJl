@@ -52,7 +52,7 @@ To install `PhenoJl`, launch Julia and use:
 
 ```julia
 using Pkg
-Pkg.add("PhenoJl")
+Pkg.add("https://github.com/labilloyg/PhenoJl.git")
 ```
 Tests are available and can be run using the `test` command in the Pkg REPL.
 
