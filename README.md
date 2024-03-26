@@ -1,5 +1,5 @@
 # PhenoJl
-A Jullia package implemening the sepsis phenotypes defined in:  
+A Julia package implemening the sepsis phenotypes defined in:  
 
 > Guirgis, F. W., Black, L. P., Henson, M., Labilloy, G., Smotherman, C., Hopson, C., Tfirn, I., DeVos, E. L., Leeuwenburgh, C., Moldawer, L., Datta, S., Brusko, T. M., Hester, A., Bertrand, A., Grijalva, V., Arango-Esterhay, A., Moore, F. A., & Reddy, S. T. (2021). A hypolipoprotein sepsis phenotype indicates reduced lipoprotein antioxidant capacity, increased endothelial dysfunction and organ failure, and worse clinical outcomes. Critical care (London, England), 25(1), 341. https://doi.org/10.1186/s13054-021-03757-5
 
