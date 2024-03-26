@@ -1,2 +1,4 @@
 .DS_Store
 Manifest.toml
+*NO_GIT*
+dev_tests.jl

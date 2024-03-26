@@ -6,6 +6,8 @@ using Test: @testset
 
     include("Pheno_tests.jl")
 
+    include("R01_LipidsII_SR_tests.jl")
+
 end
 
 end

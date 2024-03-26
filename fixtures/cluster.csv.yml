@@ -1,0 +1,11 @@
+signature_to_column_mapping:
+  LDL: A
+  HDL: B
+  total_cholesterol: C
+
+features:
+  - A
+  - B
+  - C
+  - D
+  - E
