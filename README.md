@@ -24,7 +24,7 @@ The `NORMO` and `HYPO` phenotypes are established using hierarchical clustering 
 
 Notes:
 * SOFA scores (excluding total_SOFA) range from 0 to 4.
-* _temperature_ should be in Farenheit
+* _temperature_ should be in Fahrenheit
 
 ## Docker image: labillgp/phenojl
 The easiest way to run the package is to use the available Docker image. You can get Docker [here](https://docs.docker.com/get-docker/).  
