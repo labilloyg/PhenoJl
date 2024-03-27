@@ -183,17 +183,19 @@ end
     phenotyped
 end
 
-# @setup_workload begin
-#     cluster_csv = "./fixtures/cluster.csv"
-#     cluser_csv_conf = "./fixtures/cluster.csv.yml" 
+@setup_workload begin
+    cluster_csv = "./fixtures/cluster.csv"
+    cluser_csv_conf = "./fixtures/cluster.csv.yml" 
 
-#     @compile_workload begin
-#         #ds = phenotype(cluster_csv; configfile=cluster_conf, write_output=0)
-#         ds = load(cluster_csv)
-#         n = normalize(ds)
-#         clusters = [1, 1, 2, 2, 2] # P.cluster(ds)
-#         c = load_config(cluser_csv_conf)
-#     end
-# end
+    @compile_workload begin
+        copy!(HC, pyimport_conda("scipy.cluster.hierarchy", "scipy"))
+        copy!(SP, pyimport_conda("scipy.spatial", "scipy"))
+        ds = phenotype(cluster_csv; configfile=cluser_csv_conf, write_output=1)
+        # ds = load(cluster_csv)
+        # n = normalize(ds)
+        # clusters = [1, 1, 2, 2, 2] # P.cluster(ds)
+        # c = load_config(cluser_csv_conf)
+    end
+end
 
 end # module PhenoJl
