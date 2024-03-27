@@ -10,6 +10,7 @@ using Comonicon
 using YAML
 using PyCall
 using PrecompileTools: @setup_workload, @compile_workload 
+using Pkg.Artifacts
 
 export phenotype
 
@@ -184,8 +185,9 @@ end
 end
 
 @setup_workload begin
-    cluster_csv = "./fixtures/cluster.csv"
-    cluser_csv_conf = "./fixtures/cluster.csv.yml" 
+    fixtures_path = artifact"fixtures"
+    cluster_csv = joinpath(fixtures_path, "cluster.csv") #"./fixtures/cluster.csv"
+    cluser_csv_conf = joinpath(fixtures_path, "cluster.csv.yml") #"./fixtures/cluster.csv.yml" 
 
     @compile_workload begin
         copy!(HC, pyimport_conda("scipy.cluster.hierarchy", "scipy"))
