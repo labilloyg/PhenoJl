@@ -47,7 +47,8 @@ The Julia repository contains an example of script using Docker for *nix systems
 ## Julia package 
 
 ### Installation
-The Julia programming language is trivial to install.  See the [official documentation](https://julialang.org/downloads/).  
+The Julia programming language is trivial to install.  See the [official documentation](https://julialang.org/downloads/). Alternatively, Julia official Docker containers are available [here](https://hub.docker.com/_/julia).  
+
 To install `PhenoJl`, launch Julia and use:
 
 ```julia
