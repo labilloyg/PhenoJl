@@ -11,6 +11,8 @@ using YAML
 using PyCall
 using PrecompileTools: @setup_workload, @compile_workload 
 
+export phenotype
+
 const HC = PyNULL()
 const SP = PyNULL()
 
