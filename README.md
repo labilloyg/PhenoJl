@@ -1,5 +1,5 @@
 # PhenoJl
-A Julia package implemening the sepsis phenotypes defined in:  
+A Julia package implementing the sepsis phenotypes defined in:
 
 > Guirgis, F. W., Black, L. P., Henson, M., Labilloy, G., Smotherman, C., Hopson, C., Tfirn, I., DeVos, E. L., Leeuwenburgh, C., Moldawer, L., Datta, S., Brusko, T. M., Hester, A., Bertrand, A., Grijalva, V., Arango-Esterhay, A., Moore, F. A., & Reddy, S. T. (2021). A hypolipoprotein sepsis phenotype indicates reduced lipoprotein antioxidant capacity, increased endothelial dysfunction and organ failure, and worse clinical outcomes. Critical care (London, England), 25(1), 341. https://doi.org/10.1186/s13054-021-03757-5
 
@@ -27,34 +27,62 @@ Notes:
 * _temperature_ should be in Fahrenheit
 
 ## Docker image: labillgp/phenojl
+
+### Running once
 The easiest way to run the package is to use the available Docker image. You can get Docker [here](https://docs.docker.com/get-docker/).  
-Assuming `data.csv` contains at least 15 columns with the features names listed above, one can run:
+Assuming `data.csv` is a complete dataset and contains at least 15 columns with the features names listed above, one can run:
 
 ```bash
+# Phenotypes a file with properly named columns
 > cd my_data_directory
 > docker run --rm -v .:/fixtures labillgp/phenojl PhenoJl /fixtures/data.csv
 ```
-If the docker image is not present on your system, it will be automatically downloaded from DockerHub.  
+If the docker image is not present on your system, it will be automatically downloaded from Docker Hub.  
 
 Arguments can be passed to the docker instance in a similar way as they are passed to the Julia package.  For instance, to map the features to column names (more details below), one can use:
 
 ```bash
+# Phenotypes a file with alternative column names
 > cd my_data_directory
-> docker run --rm -v .:/fixtures labillgp/phenojl PhenoJl /fixtures/data.csv --configfile data.yml
+> docker run --rm -v .:/fixtures labillgp/phenojl PhenoJl data.csv --configfile data.yml
 ```
 The Julia repository contains an example of script using Docker for *nix systems.
+
+### Multiple runs
+If one plans on running the algorithm multiple times, one can start the container once, then use the `exec` docker command: 
+
+```bash
+# Starts a phenojl container
+> cd my_data_directory
+> docker run -d --name phenojl --rm -v .:/fixtures labillgp/phenojl tail -f /dev/null
+```
+
+Then run the algorithm one or multiple times:
+```bash
+# Phenotypes a file using the phenojl running container
+> docker exec phenojl PhenoJl data.csv --configfile data.yml
+```
+
+To evantually stop the container:
+```bash
+# Stops the running phenojl container
+> docker container stop phenojl
+```
 
 ## Julia package 
 
 ### Installation
-The Julia programming language is trivial to install.  See the [official documentation](https://julialang.org/downloads/).  
+The Julia programming language is trivial to install.  See the [official documentation](https://julialang.org/downloads/). Alternatively, Julia official Docker containers are available [here](https://hub.docker.com/_/julia).  
+
 To install `PhenoJl`, launch Julia and use:
 
 ```julia
 using Pkg
-Pkg.add("https://github.com/labilloyg/PhenoJl.git")
+Pkg.add("https://github.com/labilloyg/PhenoJl.git#0.1.0-rc1")
 ```
 Tests are available and can be run using the `test` command in the Pkg REPL.
+
+Note: One test relies on a real dataset not included in the repository. The test will appear as "broken" if the user does not provide the file.
 
 ### Usage
 The code below will create a file named `mydataset_phenotyped.csv` with the content of the datatset annotated with two new columns:  
@@ -67,11 +95,11 @@ phenotype("mydataset.csv")
 ```
 
 ### Phenotype identification
-The original publication reviews the patients clusters and associates a cluster to a phenotype. This package automatically identifies the phenotypes. To do so, it looks at the cholesterol levels. The cluster with the lowest average cholesterol level will be associated to `HYPO`. If the average value of either or both of HDL or HDL in `HYPO` cluster is higher than those in `NORMO`, a warning will be emitted.
+The original publication reviews the patient clusters and associates a cluster to a phenotype. This package automatically identifies the phenotypes. To do so, it looks at the cholesterol levels. The cluster with the lowest average cholesterol level will be associated to `HYPO`. If the average value of either or both of HDL or HDL in `HYPO` cluster is higher than those in `NORMO`, a warning will be emitted.
 
 ### Input file format
 The input file should be a csv file containing at least the 15 features. 
-- More columns can be present in the dataset, they will be ignored by the algorithm and present in the phenotyped file. 
+- More columns can be present in the dataset; they will be ignored by the algorithm and present in the phenotyped file. 
 - If either a column named _cluster_ or _phenotype_ is present in the dataset, it will be discarded and replaced by the output of the algorithm.
 - The column names should match the names of the features listed above or a configuration file (see below) should be provided to map features to columns. The output file will contain the original column names. 
 
@@ -92,7 +120,7 @@ Then use:
 phenotype("mydataset.csv"; configfile="config.yml")
 ```
 
-**Note**: The configuration file also allows a _features_ parameters defining the names of the columns to be taken into account by the algorithm. This option is useful for developement purpose.  
+**Note**: The configuration file also allows a _features_ parameters defining the names of the columns to be taken into account by the algorithm. This option is useful for development purpose.  
 
 ## Author
-This package was written by [G. Labilloy](guillaume.labilloy@jax.ufl.edu).
+This package was written by [G. Labilloy](guillaume.labilloy@gmail.com).

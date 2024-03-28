@@ -10,9 +10,16 @@ using Comonicon
 using YAML
 using PyCall
 using PrecompileTools: @setup_workload, @compile_workload 
+using Pkg.Artifacts
+using Downloads
+
+export phenotype
 
 const HC = PyNULL()
 const SP = PyNULL()
+
+const __JL_COMPILE_APP__ = "JL_COMPILE_APP"
+
 
 function __init__()
     copy!(HC, pyimport_conda("scipy.cluster.hierarchy", "scipy"))
@@ -181,17 +188,27 @@ end
     phenotyped
 end
 
-# @setup_workload begin
-#     cluster_csv = "./fixtures/cluster.csv"
-#     cluser_csv_conf = "./fixtures/cluster.csv.yml" 
+if __JL_COMPILE_APP__ ∈ keys(ENV) && ENV[__JL_COMPILE_APP__] == "1"
+    @info "Skipping module precompilation workload because $__JL_COMPILE_APP__ == 1"
+else
+    @setup_workload begin
+        fixtures = YAML.load_file("fixtures.yml")
+        csv = fixtures["cluster_csv"]
+        csv_conf = fixtures["cluster_csv_conf"]
+        path = tempname(".")
+        mkdir(path)
+        cd(path)
 
-#     @compile_workload begin
-#         #ds = phenotype(cluster_csv; configfile=cluster_conf, write_output=0)
-#         ds = load(cluster_csv)
-#         n = normalize(ds)
-#         clusters = [1, 1, 2, 2, 2] # P.cluster(ds)
-#         c = load_config(cluser_csv_conf)
-#     end
-# end
+        @compile_workload begin
+            __init__() 
+            downloader = Downloader(; grace=0)
+            Downloads.download(csv["url"], csv["name"]; downloader)
+            Downloads.download(csv_conf["url"], csv_conf["name"]; downloader)
+            ds = phenotype(csv["name"]; configfile=csv_conf["name"], write_output=1)
+        end
+        cd("..")
+        rm(path; recursive=true) 
+    end
+end
 
 end # module PhenoJl
