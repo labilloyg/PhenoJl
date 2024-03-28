@@ -1,0 +1,9 @@
+cluster_csv:
+  name: "cluster.csv"
+  url: "https://raw.githubusercontent.com/labilloyg/PhenoJl/master/fixtures/cluster.csv"
+
+cluster_csv_conf: 
+  name: "clsuter.csv.yml"
+  url: "https://raw.githubusercontent.com/labilloyg/PhenoJl/master/fixtures/cluster.csv.yml"
+
+

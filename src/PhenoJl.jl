@@ -192,20 +192,22 @@ if __JL_COMPILE_APP__ ∈ keys(ENV) && ENV[__JL_COMPILE_APP__] == "1"
     @info "Skipping module precompilation workload because $__JL_COMPILE_APP__ == 1"
 else
     @setup_workload begin
-        cluster_csv = "cluster.csv"
-        cluster_csv_conf = "cluster.csv.conf"
+        fixtures = YAML.load_file("fixtures.yml")
+        csv = fixtures["cluster_csv"]
+        csv_conf = fixtures["cluster_csv_conf"]
         path = tempname(".")
         mkdir(path)
         cd(path)
 
         @compile_workload begin
-            __init__()
-            Downloads.download("https://raw.githubusercontent.com/labilloyg/PhenoJl/master/fixtures/cluster.csv", joinpath(".", cluster_csv))
-            Downloads.download("https://raw.githubusercontent.com/labilloyg/PhenoJl/master/fixtures/cluster.csv.yml", joinpath(".", cluster_csv_conf))
-            ds = phenotype(cluster_csv; configfile=cluster_csv_conf, write_output=1)
+            __init__() 
+            downloader = Downloader(; grace=0)
+            Downloads.download(csv["url"], csv["name"]; downloader)
+            Downloads.download(csv_conf["url"], csv_conf["name"]; downloader)
+            ds = phenotype(csv["name"]; configfile=csv_conf["name"], write_output=1)
         end
         cd("..")
-        rm(path; recursive=true)
+        rm(path; recursive=true) 
     end
 end
 

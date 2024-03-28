@@ -1,4 +1,3 @@
-#using PyCall
 using Downloads
 using PhenoJl
 
@@ -14,7 +13,7 @@ Downloads.download("https://raw.githubusercontent.com/labilloyg/PhenoJl/master/f
 ds = phenotype(cluster_csv; configfile=cluster_csv_conf, write_output=1)
 ds = phenotype(cluster_csv; configfile=cluster_csv_conf, write_output=0)
 
-cd("..")#
+cd("..")
 rm(path; recursive=true)
 
 
