@@ -1,7 +1,7 @@
 name = "PhenoJl"
 uuid = "305b1298-f7a1-4bb2-a0c3-c1dd5edf5360"
 authors = ["Guillaume Labilloy <guillaume.labilloy@jax.ufl.edu>"]
-version = "0.1.0-rc1"
+version = "0.1.0-rc2"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
