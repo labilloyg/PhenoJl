@@ -1,7 +1,0 @@
-[fixtures]
-git-tree-sha1 = "a8920c4c93fada9721148ce5bdd3dbd92db57a8f"
-
-    [[fixtures.download]]
-    url = "https://github.com/labilloyg/PhenoJl/tree/0.1.0-rc1/fixtures"
-    sha256 = "c6b9f2d9ee0c68cbf6e5761b5a225a95669a3e0568accc10b87401ac38905bbd"
-    

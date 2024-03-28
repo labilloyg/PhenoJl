@@ -11,11 +11,15 @@ using YAML
 using PyCall
 using PrecompileTools: @setup_workload, @compile_workload 
 using Pkg.Artifacts
+using Downloads
 
 export phenotype
 
 const HC = PyNULL()
 const SP = PyNULL()
+
+const __JL_COMPILE_APP__ = "JL_COMPILE_APP"
+
 
 function __init__()
     copy!(HC, pyimport_conda("scipy.cluster.hierarchy", "scipy"))
@@ -184,19 +188,24 @@ end
     phenotyped
 end
 
-@setup_workload begin
-    fixtures_path = artifact"fixtures"
-    cluster_csv = joinpath(fixtures_path, "cluster.csv") #"./fixtures/cluster.csv"
-    cluser_csv_conf = joinpath(fixtures_path, "cluster.csv.yml") #"./fixtures/cluster.csv.yml" 
+if __JL_COMPILE_APP__ ∈ keys(ENV) && ENV[__JL_COMPILE_APP__] == "1"
+    @info "Skipping module precompilation workload because $__JL_COMPILE_APP__ == 1"
+else
+    @setup_workload begin
+        cluster_csv = "cluster.csv"
+        cluster_csv_conf = "cluster.csv.conf"
+        path = tempname(".")
+        mkdir(path)
+        cd(path)
 
-    @compile_workload begin
-        copy!(HC, pyimport_conda("scipy.cluster.hierarchy", "scipy"))
-        copy!(SP, pyimport_conda("scipy.spatial", "scipy"))
-        ds = phenotype(cluster_csv; configfile=cluser_csv_conf, write_output=1)
-        # ds = load(cluster_csv)
-        # n = normalize(ds)
-        # clusters = [1, 1, 2, 2, 2] # P.cluster(ds)
-        # c = load_config(cluser_csv_conf)
+        @compile_workload begin
+            __init__()
+            Downloads.download("https://raw.githubusercontent.com/labilloyg/PhenoJl/master/fixtures/cluster.csv", joinpath(".", cluster_csv))
+            Downloads.download("https://raw.githubusercontent.com/labilloyg/PhenoJl/master/fixtures/cluster.csv.yml", joinpath(".", cluster_csv_conf))
+            ds = phenotype(cluster_csv; configfile=cluster_csv_conf, write_output=1)
+        end
+        cd("..")
+        rm(path; recursive=true)
     end
 end
 
